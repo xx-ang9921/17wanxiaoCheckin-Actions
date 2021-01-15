@@ -244,13 +244,13 @@ def check_in(username, password):
         logging.warning(errmsg)
         return False
 
-    # 获取第一类健康打卡的参数
-    json1 = {"businessType": "epmpics",
-             "jsonData": {"templateid": "pneumonia", "token": token},
-             "method": "userComeApp"}
-    post_dict = get_post_json(json1)
+#     # 获取第一类健康打卡的参数
+#     json1 = {"businessType": "epmpics",
+#              "jsonData": {"templateid": "pneumonia", "token": token},
+#              "method": "userComeApp"}
+#     post_dict = get_post_json(json1)
 
-    if post_dict:
+#     if post_dict:
         # 第一类健康打卡
         # print(post_dict)
 
@@ -266,9 +266,9 @@ def check_in(username, password):
         #                        '"town":"","pois":"河南师范大学(东区)","lng":113.91572178314209,' \
         #                        '"lat":35.327695868943984,"address":"牧野区建设东路89号河南师范大学(东区)","text":"河南省-新乡市",' \
         #                        '"code":""} '
-        healthy_check_dict = healthy_check_in(token, post_dict)
-        check_dict_list.append(healthy_check_dict)
-    else:
+#         healthy_check_dict = healthy_check_in(token, post_dict)
+#         check_dict_list.append(healthy_check_dict)
+#     else:
         # 获取第二类健康打卡参数
         post_dict = get_recall_data(token)
         # 第二类健康打卡
@@ -276,32 +276,32 @@ def check_in(username, password):
         check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
-    id_list = get_id_list(token, custom_id_dict['customerAppTypeId'])
-    # print(id_list)
-    if not id_list:
-        return check_dict_list
+#     id_list = get_id_list(token, custom_id_dict['customerAppTypeId'])
+#     # print(id_list)
+#     if not id_list:
+#         return check_dict_list
 
-    # 校内打卡
-    for index, i in enumerate(id_list):
-        if ape_list[index]:
-            # print(i)
-            logging.info(f"-------------------------------{i['templateid']}-------------------------------")
-            json2 = {"businessType": "epmpics",
-                     "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
-                                  "stuNo": post_dict['stuNo'],
-                                  "token": token}, "method": "userComeAppSchool",
-                     "token": token}
-            campus_dict = get_post_json(json2)
-            campus_dict['areaStr'] = post_dict['areaStr']
-            for j in campus_dict['updatainfo']:
-                if j['propertyname'] == 'temperature':
-                    j['value'] = '36.4'
-                if j['propertyname'] == 'symptom':
-                    j['value'] = '无症状'
-            campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
-            check_dict_list.append(campus_check_dict)
-            logging.info("--------------------------------------------------------------")
-    return check_dict_list
+#     # 校内打卡
+#     for index, i in enumerate(id_list):
+#         if ape_list[index]:
+#             # print(i)
+#             logging.info(f"-------------------------------{i['templateid']}-------------------------------")
+#             json2 = {"businessType": "epmpics",
+#                      "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
+#                                   "stuNo": post_dict['stuNo'],
+#                                   "token": token}, "method": "userComeAppSchool",
+#                      "token": token}
+#             campus_dict = get_post_json(json2)
+#             campus_dict['areaStr'] = post_dict['areaStr']
+#             for j in campus_dict['updatainfo']:
+#                 if j['propertyname'] == 'temperature':
+#                     j['value'] = '36.4'
+#                 if j['propertyname'] == 'symptom':
+#                     j['value'] = '无症状'
+#             campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
+#             check_dict_list.append(campus_check_dict)
+#             logging.info("--------------------------------------------------------------")
+#     return check_dict_list
 
 
 def server_push(sckey, desp):
